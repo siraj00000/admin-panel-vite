@@ -6,6 +6,7 @@ import {
   Library, 
   Monitor,  
   Menu,
+  Banknote,
   X
 } from 'lucide-react';
 import { theme } from '../../utils/constants';
@@ -74,7 +75,13 @@ const Sidebar: React.FC<SidebarProps> = ({
       label: 'Program',
       icon: <Monitor className="h-5 w-5" />,
       path: '/program'
-    }
+    },
+    {
+      id: 'bank',
+      label: 'Bank',
+      icon: <Banknote className="h-5 w-5" />,
+      path: '/bank'
+    },
   ];
 
   // Listen for URL changes

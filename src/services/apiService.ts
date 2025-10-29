@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Announcement, ApiResponse, Business, ErrorResponse, Library, Program, SimpleResponse } from '../types/apiTypes';
+import type { Announcement, ApiResponse, Bank, Business, ErrorResponse, Library, Program, SimpleResponse, Stats, StatsApiResponse } from '../types/apiTypes';
 import { APP_CONFIG } from '../utils/constants';
 const BASE_URL = APP_CONFIG.API_BASE_URL;
 
@@ -329,6 +329,100 @@ export const programService = {
     } catch (err) {
       const error = err as ErrorResponse;
       const message = error.response?.data?.message || 'Failed to delete program';
+      throw new Error(message);
+    }
+  }
+};
+
+export const dashboardService = {
+  getStats: async (): Promise<StatsApiResponse<Stats>> => {
+    try {
+      const response = await axios.get<StatsApiResponse<Stats>>(
+        `${BASE_URL}/stats/`
+      );
+      return response.data;
+    } catch (err) {
+      const error = err as ErrorResponse;
+      const message = error.response?.data?.message || 'Failed to fetch stats';
+      throw new Error(message);
+    }
+  },
+}
+
+export const bankService = {
+  // Create bank
+  create: async (data: Omit<Bank, '_id' | 'createdAt' | 'updatedAt'>): Promise<Bank> => {
+    try {
+      const response = await axios.post<ApiResponse<Bank>>(`${BASE_URL}/bank`, data);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to create bank');
+      }
+
+      return response.data.data!;
+    } catch (err) {
+      const error = err as ErrorResponse;
+      const message = error.response?.data?.message || 'Failed to create bank';
+      throw new Error(message);
+    }
+  },
+
+  // Get all banks
+  getAll: async (params: { search?: string; limit?: number; sortBy?: string; sortOrder?: 'asc' | 'desc' } = {}): Promise<SimpleResponse<Bank>> => {
+    try {
+      const {
+        search = '',
+        limit = 100,
+        sortBy = 'createdAt',
+        sortOrder = 'desc'
+      } = params;
+
+      const queryParams = new URLSearchParams();
+      if (search) queryParams.append('search', search);
+      if (limit) queryParams.append('limit', limit.toString());
+      if (sortBy) queryParams.append('sortBy', sortBy);
+      if (sortOrder) queryParams.append('sortOrder', sortOrder);
+
+      const response = await axios.get<SimpleResponse<Bank>>(
+        `${BASE_URL}/bank?${queryParams.toString()}`
+      );
+
+      return response.data;
+    } catch (err) {
+      const error = err as ErrorResponse;
+      const message = error.response?.data?.message || 'Failed to fetch banks';
+      throw new Error(message);
+    }
+  },
+
+  // Update bank
+  update: async (id: string, data: Partial<Bank>): Promise<Bank> => {
+    try {
+      const response = await axios.patch<ApiResponse<Bank>>(`${BASE_URL}/bank/${id}`, data);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to update bank');
+      }
+
+      return response.data.data!;
+    } catch (err) {
+      const error = err as ErrorResponse;
+      const message = error.response?.data?.message || 'Failed to update bank';
+      throw new Error(message);
+    }
+  },
+
+  // Delete bank
+  delete: async (id: string): Promise<void> => {
+    try {
+      const response = await axios.delete<ApiResponse>(`${BASE_URL}/bank/${id}`);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to delete bank');
+      }
+    } catch (err) {
+      const error = err as ErrorResponse;
+      const message = error.response?.data?.message || 'Failed to delete bank';
       throw new Error(message);
     }
   }

@@ -13,11 +13,12 @@ import {
     Clock,
 } from 'lucide-react';
 import { theme } from '../utils/constants';
+import { dashboardService } from '../services/apiService';
 
 interface StatCard {
     id: string;
     title: string;
-    value: string;
+    value: number;
     change: number;
     changeType: 'increase' | 'decrease';
     icon: React.ReactNode;
@@ -50,6 +51,9 @@ const Dashboard: React.FC = () => {
         const loadDashboardData = async () => {
             setIsLoading(true);
 
+            const response = await dashboardService.getStats();
+            console.log("STATISTICS::", response);
+
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -58,8 +62,8 @@ const Dashboard: React.FC = () => {
                 {
                     id: 'total-users',
                     title: 'Total Users',
-                    value: '12,847',
-                    change: 12.5,
+                    value: response.data?.users || 0,
+                    change: response.data?.users || 0,
                     changeType: 'increase',
                     icon: <Users className="h-6 w-6" />,
                     color: theme.secondary
@@ -67,8 +71,8 @@ const Dashboard: React.FC = () => {
                 {
                     id: 'businesses',
                     title: 'Registered Businesses',
-                    value: '2,431',
-                    change: 8.3,
+                    value: response.data?.businesses || 0,
+                    change: response.data?.businesses || 0,
                     changeType: 'increase',
                     icon: <Building2 className="h-6 w-6" />,
                     color: theme.primary
@@ -76,8 +80,8 @@ const Dashboard: React.FC = () => {
                 {
                     id: 'library-items',
                     title: 'Library Items',
-                    value: '8,392',
-                    change: 15.2,
+                    value: response.data?.liberaries || 0,
+                    change: response.data.liberaries || 0,
                     changeType: 'increase',
                     icon: <BookOpen className="h-6 w-6" />,
                     color: '#3b82f6'
@@ -85,8 +89,8 @@ const Dashboard: React.FC = () => {
                 {
                     id: 'active-programs',
                     title: 'Active Programs',
-                    value: '147',
-                    change: -2.1,
+                    value: response.data?.programs || 0,
+                    change: response.data.programs || 0,
                     changeType: 'decrease',
                     icon: <TrendingUp className="h-6 w-6" />,
                     color: '#10b981'
@@ -222,7 +226,7 @@ const Dashboard: React.FC = () => {
                                     {stat.icon}
                                 </div>
                             </div>
-                            <div className={`flex items-center text-sm font-medium ${stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
+                            <div className={`hidden items-center text-sm font-medium ${stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
                                 }`}>
                                 {stat.changeType === 'increase' ? (
                                     <ArrowUpRight className="h-4 w-4 mr-1" />
@@ -239,7 +243,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Charts and Activities Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid-cols-1 lg:grid-cols-3 gap-6 hidden">
                 {/* Simple Chart Visualization */}
                 <div className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                     <div className="flex items-center justify-between mb-6">

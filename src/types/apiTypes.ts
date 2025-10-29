@@ -15,6 +15,12 @@ export interface SimpleResponse<T> {
     };
 }
 
+export interface StatsApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T
+}
+
 export interface ErrorResponse {
     response?: {
         data: ApiResponse
@@ -69,39 +75,55 @@ export interface Session {
 }
 
 export interface Business {
-  _id?: string;
-  title: string;
-  business_type?: string;
-  business_detail?: string;
-  address?: string;
-  contact_person?: string;
-  services?: string[];
-  phone_number?: string;
-  email?: string;
-  website?: string;
-  fb_id?: string;
-  insta_id?: string;
-  portfolio_images?: string[];
-  createdAt?: string;
-  updatedAt?: string;
+    _id?: string;
+    title: string;
+    business_type?: string;
+    business_detail?: string;
+    address?: string;
+    contact_person?: string;
+    services?: string[];
+    phone_number?: string;
+    email?: string;
+    website?: string;
+    fb_id?: string;
+    insta_id?: string;
+    portfolio_images?: string[];
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface Library {
-  _id?: string;
-  title: string;
-  description?: string;
-  email?: string;
-  createdAt?: string;
-  updatedAt?: string;
+    _id?: string;
+    title: string;
+    description?: string;
+    email?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface Program {
-  _id?: string;
-  title: string;
-  hijri_date: string;
-  georgian_date: string;
-  description?: string;
-  speaker?: string;
-  createdAt?: string;
-  updatedAt?: string;
+    _id?: string;
+    title: string;
+    hijri_date: string;
+    georgian_date: string;
+    description?: string;
+    speaker?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface Stats {
+    users: number;
+    businesses: number;
+    liberaries: number;
+    programs: number;
+}
+
+export interface Bank {
+    _id?: string;
+    bank_name: string;
+    account_title: string;
+    account_number: string;
+    createdAt?: string;
+    updatedAt?: string;
 }

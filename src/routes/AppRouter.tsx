@@ -7,7 +7,7 @@ import {
   ResetPasswordWrapper
 } from "../components/route-wrappers";
 import { RootRedirect, NotFound } from "../components/route-utils";
-import { Dashboard, Announcement, Business, Library, Program } from "../pages";
+import { Dashboard, Announcement, Business, Library, Program, Bank } from "../pages";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +90,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedLayout>
             <Program />
+          </ProtectedLayout>
+        ),
+      },
+      {
+        path: "bank",
+        element: (
+          <ProtectedLayout>
+            <Bank />
           </ProtectedLayout>
         ),
       },

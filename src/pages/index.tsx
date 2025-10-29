@@ -6,3 +6,4 @@ export { default as Announcement } from './Announcement';
 export { default as Business } from './Business';
 export { default as Library } from './Library';
 export { default as Program } from './Program';
+export { default as Bank } from './Bank';

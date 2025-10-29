@@ -10,7 +10,7 @@ export const announcementSchema = yup.object().shape({
     .max(200, 'Title must be less than 200 characters'),
   
   hijri_date: yup.string()
-    .required('Hijri date is required'),
+    .optional(),
   
   georgian_date: yup.string()
     .required('Georgian date is required'),
@@ -254,3 +254,29 @@ export const createLibrarySchema = librarySchema;
 export const updateLibrarySchema = librarySchema.clone().shape({
   title: yup.string().optional()
 });
+
+// ============================================================================
+// VALIDATION BANK
+// ============================================================================
+
+export const bankSchema = yup.object().shape({
+  bank_name: yup.string()
+    .required('Bank name is required')
+    .max(200, 'Bank name must be less than 200 characters'),
+
+  account_title: yup.string()
+    .required('Account title is required')
+    .max(200, 'Account title must be less than 200 characters'),
+
+  account_number: yup.string()
+    .required('Account number is required')
+    .matches(/^[0-9]+$/, 'Account number must contain only digits')
+    .min(8, 'Account number must be at least 8 digits')
+    .max(20, 'Account number must be less than 20 digits'),
+});
+
+export interface BankFormData {
+  bank_name: string;
+  account_title: string;
+  account_number: string;
+}
