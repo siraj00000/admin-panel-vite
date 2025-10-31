@@ -281,7 +281,7 @@ const AnnouncementsPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Hijri Date *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Hijri Date</label>
                     <input
                       type="text"
                       name="hijri_date"
@@ -290,7 +290,7 @@ const AnnouncementsPage: React.FC = () => {
                       className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
                         formErrors.hijri_date ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="e.g., 15/03/1445"
+                      placeholder="Jumada I 8, 1447 AH (Hijri)"
                     />
                     {formErrors.hijri_date && <p className="mt-1 text-sm text-red-500">{formErrors.hijri_date}</p>}
                   </div>
