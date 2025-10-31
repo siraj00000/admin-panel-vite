@@ -37,7 +37,7 @@ const BusinessTypeSelector: React.FC<BusinessTypeSelectorProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
-
+  console.log('Custom Input Function:', showCustomInput);
   const directoryItems = [
     "Architect",
     "Automobile",
