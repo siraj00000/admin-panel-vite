@@ -13,13 +13,150 @@ import {
   X,
   Facebook,
   Instagram,
-  Upload
+  Upload,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import { businessService } from '../services/apiService';
 import { businessSchema, type BusinessFormData, validateFormWithYup } from '../schemas/validation';
 import type { Business } from '../types/apiTypes';
 import { theme } from '../utils/constants';
 
+// Business Type Component
+interface BusinessTypeSelectorProps {
+  value: string;
+  onChange: (value: string) => void;
+  onCustomInput?: (value: string) => void;
+}
+
+const BusinessTypeSelector: React.FC<BusinessTypeSelectorProps> = ({ 
+  value, 
+  onChange, 
+  onCustomInput 
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [customValue, setCustomValue] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
+
+  const directoryItems = [
+    "Architect",
+    "Automobile",
+    "Bank",
+    "Bulldozer",
+    "Business & Finance",
+    "Compliance",
+    "Dinning Hall",
+    "Document",
+    "Electrician",
+    "Ellipsis",
+    "Express Delivery",
+    "Fashion",
+    "Fences",
+    "Foster Family",
+    "Online Learning",
+    "Online Test",
+    "Plumber",
+    "Residential",
+    "Salon",
+    "Solar Energy",
+    "Technical Support",
+    "Transportation"
+  ];
+
+  const filteredItems = directoryItems.filter(item =>
+    item.toLowerCase().includes(customValue.toLowerCase())
+  );
+
+  const handleSelect = (item: string) => {
+    onChange(item);
+    setIsOpen(false);
+    setShowCustomInput(false);
+    setCustomValue('');
+  };
+
+  const handleCustomSubmit = () => {
+    if (customValue.trim()) {
+      if (onCustomInput) {
+        onCustomInput(customValue.trim());
+      } else {
+        onChange(customValue.trim());
+      }
+      setIsOpen(false);
+      setShowCustomInput(false);
+      setCustomValue('');
+    }
+  };
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 flex items-center justify-between bg-white"
+      >
+        <span className={value ? 'text-gray-800' : 'text-gray-500'}>
+          {value || 'Select business type'}
+        </span>
+        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          {/* Search/Custom Input */}
+          <div className="p-2 border-b border-gray-200">
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={customValue}
+                onChange={(e) => setCustomValue(e.target.value)}
+                placeholder="Search or type custom type..."
+                className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-yellow-500"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleCustomSubmit();
+                  }
+                }}
+              />
+              {customValue && !directoryItems.includes(customValue) && (
+                <button
+                  onClick={handleCustomSubmit}
+                  className="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                >
+                  Add
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Options List */}
+          <div className="py-1">
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => handleSelect(item)}
+                  className={`w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center justify-between ${
+                    value === item ? 'bg-yellow-50 text-yellow-700' : 'text-gray-700'
+                  }`}
+                >
+                  <span>{item}</span>
+                  {value === item && <Check className="h-4 w-4" />}
+                </button>
+              ))
+            ) : (
+              <div className="px-3 py-2 text-sm text-gray-500 text-center">
+                No matches found
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Main Business Page Component
 const BusinessPage: React.FC = () => {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -70,6 +207,14 @@ const BusinessPage: React.FC = () => {
     
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleBusinessTypeChange = (value: string) => {
+    setFormData(prev => ({ ...prev, business_type: value.toLowerCase() }));
+    
+    if (formErrors.business_type) {
+      setFormErrors(prev => ({ ...prev, business_type: '' }));
     }
   };
 
@@ -402,14 +547,11 @@ const BusinessPage: React.FC = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Business Type</label>
-                    <input
-                      type="text"
-                      name="business_type"
-                      value={formData.business_type}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                      placeholder="e.g., Restaurant, Mosque, Education"
+                    <BusinessTypeSelector
+                      value={formData.business_type || ''}
+                      onChange={handleBusinessTypeChange}
                     />
+                    {formErrors.business_type && <p className="mt-1 text-sm text-red-500">{formErrors.business_type}</p>}
                   </div>
                 </div>
 
