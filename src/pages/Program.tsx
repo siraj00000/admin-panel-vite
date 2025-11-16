@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Search, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
   Calendar,
   User,
   X
@@ -18,7 +18,7 @@ const ProgramPage: React.FC = () => {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
+
   // Form states
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<Program | null>(null);
@@ -40,7 +40,7 @@ const ProgramPage: React.FC = () => {
   const loadPrograms = async () => {
     setLoading(true);
     try {
-      const response = await programService.getAll({ limit: 100 }); 
+      const response = await programService.getAll({ limit: 100 });
       setPrograms(response.data.items);
     } catch (error) {
       console.error('Failed to load programs:', error);
@@ -57,7 +57,7 @@ const ProgramPage: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -66,7 +66,7 @@ const ProgramPage: React.FC = () => {
   // Form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const { isValid, errors } = await validateFormWithYup(programSchema, formData);
     if (!isValid) {
       setFormErrors(errors);
@@ -86,7 +86,7 @@ const ProgramPage: React.FC = () => {
       } else {
         await programService.create(dataToSubmit);
       }
-      
+
       await loadPrograms();
       resetForm();
     } catch (error) {
@@ -196,7 +196,7 @@ const ProgramPage: React.FC = () => {
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">
                       {item.title}
                     </h3>
-                    
+
                     <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 mr-1" />
@@ -269,9 +269,8 @@ const ProgramPage: React.FC = () => {
                     name="title"
                     value={formData.title}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                      formErrors.title ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.title ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter program title"
                   />
                   {formErrors.title && <p className="mt-1 text-sm text-red-500">{formErrors.title}</p>}
@@ -280,16 +279,15 @@ const ProgramPage: React.FC = () => {
                 {/* Dates */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Hijri Date *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Hijri Date</label>
                     <input
                       type="text"
                       name="hijri_date"
                       value={formData.hijri_date}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                        formErrors.hijri_date ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      placeholder="e.g., 15/03/1445"
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.hijri_date ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                      placeholder="Jumada I 8, 1447 AH (Hijri)"
                     />
                     {formErrors.hijri_date && <p className="mt-1 text-sm text-red-500">{formErrors.hijri_date}</p>}
                   </div>
@@ -301,9 +299,8 @@ const ProgramPage: React.FC = () => {
                       name="georgian_date"
                       value={formData.georgian_date}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                        formErrors.georgian_date ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.georgian_date ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     {formErrors.georgian_date && <p className="mt-1 text-sm text-red-500">{formErrors.georgian_date}</p>}
                   </div>
@@ -317,9 +314,8 @@ const ProgramPage: React.FC = () => {
                     name="speaker"
                     value={formData.speaker}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                      formErrors.speaker ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.speaker ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter speaker name"
                   />
                   {formErrors.speaker && <p className="mt-1 text-sm text-red-500">{formErrors.speaker}</p>}

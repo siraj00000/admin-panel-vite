@@ -41,7 +41,7 @@ export const programSchema = yup.object().shape({
     .max(200, 'Title must be less than 200 characters'),
   
   hijri_date: yup.string()
-    .required('Hijri date is required'),
+    .optional(),
   
   georgian_date: yup.string()
     .required('Georgian date is required'),
@@ -73,7 +73,7 @@ export const businessSchema = yup.object().shape({
   
   business_type: yup.string()
     .max(100, 'Business type must be less than 100 characters')
-    .optional(),
+    .required('Business type is required'),
   
   business_detail: yup.string()
     .max(500, 'Business detail must be less than 500 characters')
