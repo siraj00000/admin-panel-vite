@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Search, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
   Building2,
   Phone,
   Mail,
@@ -29,38 +29,30 @@ interface BusinessTypeSelectorProps {
   onCustomInput?: (value: string) => void;
 }
 
-const BusinessTypeSelector: React.FC<BusinessTypeSelectorProps> = ({ 
-  value, 
-  onChange, 
-  onCustomInput 
+const BusinessTypeSelector: React.FC<BusinessTypeSelectorProps> = ({
+  value,
+  onChange,
+  onCustomInput
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   console.log('Custom Input Function:', showCustomInput);
   const directoryItems = [
-    "Architect",
-    "Automobile",
-    "Bank",
-    "Bulldozer",
-    "Business & Finance",
-    "Compliance",
-    "Dinning Hall",
-    "Document",
-    "Electrician",
-    "Ellipsis",
-    "Express Delivery",
-    "Fashion",
-    "Fences",
-    "Foster Family",
-    "Online Learning",
-    "Online Test",
-    "Plumber",
-    "Residential",
-    "Salon",
-    "Solar Energy",
-    "Technical Support",
-    "Transportation"
+    "Halal food",               // No match → NEW
+    "Real estate",              // Residential → Real estate
+    "Marketing",                // No match → NEW
+    "Medical",                  // No match → NEW
+    "Electrician",              // Electrician (old)
+    "Plumber",                  // Plumber (old)
+    "Painter",                  // No match → NEW
+    "Educational",              // Online Learning / Online Test → Educational
+    "Finance",                  // Business & Finance / Bank → Finance
+    "Fashion",                  // Fashion (old)
+    "Automobiles",              // Automobile (old)
+    "Ticketing",                // No match → NEW
+    "Computer & Electronics",   // Technical Support → Computer & Electronics
+    "Miscleneous"               // Ellipsis (misc icon) → Miscleneous
   ];
 
   const filteredItems = directoryItems.filter(item =>
@@ -136,9 +128,8 @@ const BusinessTypeSelector: React.FC<BusinessTypeSelectorProps> = ({
                   key={item}
                   type="button"
                   onClick={() => handleSelect(item)}
-                  className={`w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center justify-between ${
-                    value === item ? 'bg-yellow-50 text-yellow-700' : 'text-gray-700'
-                  }`}
+                  className={`w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center justify-between ${value === item ? 'bg-yellow-50 text-yellow-700' : 'text-gray-700'
+                    }`}
                 >
                   <span>{item}</span>
                   {value === item && <Check className="h-4 w-4" />}
@@ -161,7 +152,7 @@ const BusinessPage: React.FC = () => {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
+
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<Business | null>(null);
   const [formData, setFormData] = useState<BusinessFormData>({
@@ -204,7 +195,7 @@ const BusinessPage: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -212,7 +203,7 @@ const BusinessPage: React.FC = () => {
 
   const handleBusinessTypeChange = (value: string) => {
     setFormData(prev => ({ ...prev, business_type: value.toLowerCase() }));
-    
+
     if (formErrors.business_type) {
       setFormErrors(prev => ({ ...prev, business_type: '' }));
     }
@@ -225,9 +216,9 @@ const BusinessPage: React.FC = () => {
   };
 
   const addServiceField = () => {
-    setFormData(prev => ({ 
-      ...prev, 
-      services: [...(prev.services || []), ''] 
+    setFormData(prev => ({
+      ...prev,
+      services: [...(prev.services || []), '']
     }));
   };
 
@@ -247,7 +238,7 @@ const BusinessPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const { isValid, errors } = await validateFormWithYup(businessSchema, formData);
     if (!isValid) {
       setFormErrors(errors);
@@ -257,7 +248,7 @@ const BusinessPage: React.FC = () => {
     setSubmitting(true);
     try {
       const formDataToSend = new FormData();
-      
+
       formDataToSend.append('title', formData.title);
       formDataToSend.append('business_type', formData.business_type || '');
       formDataToSend.append('business_detail', formData.business_detail || '');
@@ -268,12 +259,12 @@ const BusinessPage: React.FC = () => {
       formDataToSend.append('website', formData.website || '');
       formDataToSend.append('fb_id', formData.fb_id || '');
       formDataToSend.append('insta_id', formData.insta_id || '');
-      
+
       const filteredServices = formData.services?.filter(service => service.trim() !== '') || [];
       filteredServices.forEach((service, index) => {
         formDataToSend.append(`services[${index}]`, service);
       });
-      
+
       selectedFiles.forEach((file) => {
         formDataToSend.append('portfolio_images', file);
       });
@@ -283,7 +274,7 @@ const BusinessPage: React.FC = () => {
       } else {
         await businessService.create(formDataToSend);
       }
-      
+
       await loadBusinesses();
       resetForm();
     } catch (error) {
@@ -406,7 +397,7 @@ const BusinessPage: React.FC = () => {
                       </h3>
                       {item.business_type && (
                         <span className="px-2 py-1 text-xs font-medium rounded-full"
-                              style={{ backgroundColor: theme.primary + '20', color: theme.primary }}>
+                          style={{ backgroundColor: theme.primary + '20', color: theme.primary }}>
                           {item.business_type}
                         </span>
                       )}
@@ -425,21 +416,21 @@ const BusinessPage: React.FC = () => {
                           <span>{item.contact_person}</span>
                         </div>
                       )}
-                      
+
                       {item.phone_number && (
                         <div className="flex items-center">
                           <Phone className="h-4 w-4 mr-2" />
                           <span>{item.phone_number}</span>
                         </div>
                       )}
-                      
+
                       {item.email && (
                         <div className="flex items-center">
                           <Mail className="h-4 w-4 mr-2" />
                           <span>{item.email}</span>
                         </div>
                       )}
-                      
+
                       {item.address && (
                         <div className="flex items-center">
                           <MapPin className="h-4 w-4 mr-2" />
@@ -537,9 +528,8 @@ const BusinessPage: React.FC = () => {
                       name="title"
                       value={formData.title}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                        formErrors.title ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.title ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Enter business name"
                     />
                     {formErrors.title && <p className="mt-1 text-sm text-red-500">{formErrors.title}</p>}
@@ -587,9 +577,8 @@ const BusinessPage: React.FC = () => {
                       name="phone_number"
                       value={formData.phone_number}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                        formErrors.phone_number ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.phone_number ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="+92 300 1234567"
                     />
                     {formErrors.phone_number && <p className="mt-1 text-sm text-red-500">{formErrors.phone_number}</p>}
@@ -616,9 +605,8 @@ const BusinessPage: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${
-                        formErrors.email ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 ${formErrors.email ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="business@example.com"
                     />
                     {formErrors.email && <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>}
@@ -672,7 +660,7 @@ const BusinessPage: React.FC = () => {
                       + Add Service
                     </button>
                   </div>
-                  
+
                   {formData.services?.map((service: string, index: number) => (
                     <div key={index} className="flex items-center space-x-2 mb-2">
                       <input
@@ -695,7 +683,7 @@ const BusinessPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Portfolio Images</label>
-                  
+
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <input
                       type="file"
